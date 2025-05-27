@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/plant_provider.dart';
-import '../services/esp_service.dart';
+import '../services/pico_service.dart'; // Renamed import
 // import '../models/plant.dart'; // Removed unused import
 import '../widgets/plant_card.dart';
 import 'zone_overview_screen.dart'; // Added import for navigation
@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isConnected = false;
   Map<String, dynamic>? _currentStatus;
   Map<String, dynamic>? _waterUsage;
-  String _espIp = "...";
+  String _picoIp = "..."; // Renamed _espIp to _picoIp
 
   @override
   void initState() {
@@ -30,15 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoading = true);
 
     try {
-      _isConnected = await EspService.ping();
-      _espIp = await EspService.getBaseUrl().then((url) => url.replaceFirst('http://', ''));
+      _isConnected = await PicoService.ping(); // EspService to PicoService
+      _picoIp = await PicoService.getBaseUrl().then((url) => url.replaceFirst('http://', '')); // EspService to PicoService, _espIp to _picoIp
 
       if (_isConnected) {
         await Provider.of<PlantProvider>(context, listen: false).fetchPlants();
-        _currentStatus = await EspService.getStatus();
-        _waterUsage = await EspService.getWaterUsage();
+        _currentStatus = await PicoService.getStatus(); // EspService to PicoService
+        _waterUsage = await PicoService.getWaterUsage(); // EspService to PicoService
       } else {
-        throw Exception("Keine Verbindung zum ESP");
+        throw Exception("Keine Verbindung zum Pico"); // ESP to Pico
       }
     } catch (e) {
       if (!mounted) return; // Added this check
@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 8),
           Text(
-            _isConnected ? "Verbunden mit ESP ($_espIp)" : "Nicht verbunden ($_espIp)",
+            _isConnected ? "Verbunden mit Pico ($_picoIp)" : "Nicht verbunden (Pico: $_picoIp)", // ESP to Pico, _espIp to _picoIp
             style: TextStyle(
               color: _isConnected ? Colors.green[800] : Colors.orange[800],
               fontWeight: FontWeight.w500,

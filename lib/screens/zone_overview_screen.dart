@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/zone_routine.dart';
 import '../models/zone_shedule_editor.dart'; // Corrected import path
-import '../services/esp_service.dart';
+import '../services/pico_service.dart'; // Renamed import
 
-  late EspService esp;
+  late PicoService pico; // Renamed esp to pico, EspService to PicoService
 
 class ZoneOverviewScreen extends StatefulWidget {
   const ZoneOverviewScreen({super.key}); // Used super parameter
@@ -18,7 +18,7 @@ class _ZoneOverviewScreenState extends State<ZoneOverviewScreen> {
   @override
   void initState() {
     super.initState();
-    _zoneRoutines = esp.getRoutinesFromPico();
+    _zoneRoutines = pico.getRoutinesFromPico(); // esp to pico
   }
 
   void _editRoutine(ZoneRoutine routine, {bool fromPico = true}) async {
@@ -29,12 +29,12 @@ class _ZoneOverviewScreenState extends State<ZoneOverviewScreen> {
           initialRoutine: routine,
           isFromPico: fromPico,
           onSave: (updated) async {
-            final success = await esp.sendZoneRoutines([updated]);
+            final success = await pico.sendZoneRoutines([updated]); // esp to pico
             if (!mounted) return; // Added mounted check
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(success ? 'Routine gespeichert.' : 'Fehler beim Speichern.')),
             );
-            setState(() => _zoneRoutines = esp.getRoutinesFromPico());
+            setState(() => _zoneRoutines = pico.getRoutinesFromPico()); // esp to pico
           },
         ),
       ),

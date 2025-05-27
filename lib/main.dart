@@ -9,11 +9,11 @@ import 'providers/plant_provider.dart';
 import 'screens/main_navigation_screen.dart';
 // import 'package:shared_preferences/shared_preferences.dart'; // Removed unused import
 // import 'screens/zone_overview_screen.dart'; // Removed unused import as per analyzer
-import 'services/esp_initializer.dart';
+import 'services/pico_initializer.dart'; // Renamed import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeEspService();
+  await initializePicoService(); // initializeEspService to initializePicoService
   runApp(const MyGardenApp());
 }
 

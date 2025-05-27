@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../services/esp_service.dart';
-import '../services/esp_initializer.dart';
+import '../services/pico_service.dart'; // Renamed import
+import '../services/pico_initializer.dart'; // Renamed import
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -31,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    _ipController.text = prefs.getString('esp_ip') ?? '192.168.4.1';
+    _ipController.text = prefs.getString('pico_ip') ?? '192.168.4.1'; // esp_ip to pico_ip
     _calibrationController.text = prefs.getString('calibration') ?? '840';
   }
 
@@ -43,9 +43,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final ip = rawIp.replaceAll(RegExp(r'^https?://'), '');
     final calibration = _calibrationController.text.trim();
 
-    await prefs.setString('esp_ip', ip);
+    await prefs.setString('pico_ip', ip); // esp_ip to pico_ip
     await prefs.setString('calibration', calibration);
-    await initializeEspService();
+    await initializePicoService(); // initializeEspService to initializePicoService
 
     if (mounted) {
       setState(() => _isSaving = false);
@@ -59,12 +59,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _resetWaterUsage() async {
     final confirmed = await _showConfirmationDialog(
       title: "Wasserverbrauch zurücksetzen",
-      content: "Möchten Sie den gesamten Wasserverbrauch auf dem ESP wirklich zurücksetzen?",
+      content: "Möchten Sie den gesamten Wasserverbrauch auf dem Pico wirklich zurücksetzen?", // ESP to Pico
     );
     if (!confirmed) return;
 
     try {
-      await EspService.resetWaterUsage();
+      await PicoService.resetWaterUsage(); // EspService to PicoService
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Wasserverbrauch erfolgreich zurückgesetzt."), backgroundColor: Colors.green),
@@ -82,12 +82,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _resetRoutines() async {
     final confirmed = await _showConfirmationDialog(
       title: "Routinen zurücksetzen",
-      content: "Möchten Sie wirklich alle Bewässerungsroutinen auf dem ESP löschen?",
+      content: "Möchten Sie wirklich alle Bewässerungsroutinen auf dem Pico löschen?", // ESP to Pico
     );
     if (!confirmed) return;
 
     try {
-      await EspService.receiveRoutines([]); // Send empty list to clear
+      await PicoService.receiveRoutines([]); // EspService to PicoService
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Routinen erfolgreich zurückgesetzt."), backgroundColor: Colors.green),
@@ -136,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     try {
-      final baseUrl = await EspService.getBaseUrl();
+      final baseUrl = await PicoService.getBaseUrl(); // EspService to PicoService
       final endpoint = _httpTestEndpointController.text.startsWith('/')
           ? _httpTestEndpointController.text
           : '/${_httpTestEndpointController.text}';
@@ -199,7 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           children: [
             _buildSectionTitle("Verbindung & Kalibrierung", theme),
-            _buildTextField("IP-Adresse des ESP", _ipController, theme: theme),
+            _buildTextField("IP-Adresse des Pico", _ipController, theme: theme), // ESP to Pico
             const SizedBox(height: 12),
             _buildTextField(
               "Kalibrierfaktor (Impulse/Liter)",

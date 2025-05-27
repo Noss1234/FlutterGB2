@@ -1,7 +1,7 @@
 // screens/plant_detail_screen.dart
 import 'package:flutter/material.dart';
 import '../models/plant.dart';
-import '../services/esp_service.dart'; // Import EspService
+import '../services/pico_service.dart'; // Changed import to pico_service.dart
 
 class PlantDetailScreen extends StatefulWidget {
   final Plant plant;
@@ -31,8 +31,8 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
       _errorMessage = null;
     });
     try {
-      _currentStatus = await EspService.getStatus();
-      _waterUsage = await EspService.getWaterUsage();
+      _currentStatus = await PicoService.getStatus(); // EspService to PicoService
+      _waterUsage = await PicoService.getWaterUsage(); // EspService to PicoService
     } catch (e) {
       if (mounted) {
         setState(() {

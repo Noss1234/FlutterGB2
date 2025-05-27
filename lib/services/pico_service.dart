@@ -1,3 +1,4 @@
+import 'dart:async'; // Added for Duration and .timeout()
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,23 +7,25 @@ import 'package:flutter/foundation.dart';
 import '../models/zone_routine.dart';
 // import '../models/routine_time.dart'; // Removed unused import
 
-class EspService {
+class PicoService { // Renamed EspService to PicoService
+  static const Duration defaultTimeout = Duration(seconds: 10); // Added default timeout
+
   static Future<String> getBaseUrl() async {
     final prefs = await SharedPreferences.getInstance();
-    final ip = prefs.getString('esp_ip') ?? '192.168.4.1';
+    final ip = prefs.getString('pico_ip') ?? '192.168.4.1'; // esp_ip to pico_ip
     return 'http://$ip';
   }
 
-  static Future<List<Plant>> getPlantsFromESP() async {
+  static Future<List<Plant>> getPlantsFromPico() async { // Renamed getPlantsFromESP
     final baseUrl = await getBaseUrl();
     final url = Uri.parse('$baseUrl/routines');
-    final response = await http.get(url);
+    final response = await http.get(url).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data.map((json) => Plant.fromJson(json)).toList();
     } else {
-      throw Exception('Fehler beim Laden der Pflanzen vom ESP');
+      throw Exception('Fehler beim Laden der Pflanzen vom Pico'); // ESP to Pico
     }
   }
 
@@ -34,7 +37,7 @@ class EspService {
       'wassermenge': wassermenge,
     });
     final headers = {'Content-Type': 'application/json'};
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await http.post(url, body: body, headers: headers).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode != 200) {
       throw Exception('Start der manuellen Bewässerung fehlgeschlagen');
@@ -44,19 +47,19 @@ class EspService {
   static Future<Map<String, dynamic>> getStatus() async {
     final baseUrl = await getBaseUrl();
     final url = Uri.parse('$baseUrl/current_routine');
-    final response = await http.get(url);
+    final response = await http.get(url).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Status konnte nicht vom ESP geladen werden');
+      throw Exception('Status konnte nicht vom Pico geladen werden'); // ESP to Pico
     }
   }
 
   static Future<Map<String, dynamic>> getWaterUsage() async {
     final baseUrl = await getBaseUrl();
     final url = Uri.parse('$baseUrl/water_usage');
-    final response = await http.get(url);
+    final response = await http.get(url).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -68,7 +71,7 @@ class EspService {
   static Future<int> getPulseCount() async {
     final baseUrl = await getBaseUrl();
     final url = Uri.parse('$baseUrl/pulse_count');
-    final response = await http.get(url);
+    final response = await http.get(url).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode == 200) {
       // response.body from http.get is a non-nullable String.
@@ -86,7 +89,7 @@ class EspService {
   static Future<void> resetWaterUsage() async {
     final baseUrl = await getBaseUrl();
     final url = Uri.parse('$baseUrl/reset_water_usage');
-    final response = await http.post(url); // Assuming no body is needed
+    final response = await http.post(url).timeout(defaultTimeout); // Added timeout, Assuming no body is needed
 
     if (response.statusCode != 200) {
       throw Exception('Zurücksetzen des Wasserverbrauchs fehlgeschlagen');
@@ -113,7 +116,7 @@ class EspService {
     final url = Uri.parse('$baseUrl/stop_manual');
     final body = jsonEncode({'kanal': kanal});
     final headers = {'Content-Type': 'application/json'};
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await http.post(url, body: body, headers: headers).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode != 200) {
       throw Exception('Stoppen der manuellen Bewässerung für Kanal $kanal fehlgeschlagen. Status: ${response.statusCode}');
@@ -125,7 +128,7 @@ class EspService {
     final url = Uri.parse('$baseUrl/receive_routines');
     final body = jsonEncode(routinesData);
     final headers = {'Content-Type': 'application/json'};
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await http.post(url, body: body, headers: headers).timeout(defaultTimeout); // Added timeout
 
     if (response.statusCode != 200) {
       throw Exception('Senden der Routinen fehlgeschlagen. Status: ${response.statusCode}');
@@ -134,11 +137,11 @@ class EspService {
 
 
 Future<List<ZoneRoutine>> getRoutinesFromPico() async {
-    final baseUrl = await EspService.getBaseUrl(); // Added baseUrl
+    final baseUrl = await PicoService.getBaseUrl(); // EspService to PicoService
     final uri = Uri.parse('$baseUrl/routines');
 
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri).timeout(defaultTimeout); // Added timeout
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -163,7 +166,7 @@ Future<List<ZoneRoutine>> getRoutinesFromPico() async {
   }
 
   Future<bool> sendZoneRoutines(List<ZoneRoutine> routines) async {
-    final baseUrl = await EspService.getBaseUrl(); // Added baseUrl
+    final baseUrl = await PicoService.getBaseUrl(); // EspService to PicoService
     final uri = Uri.parse('$baseUrl/receive_routines');
 
     final List<Map<String, dynamic>> jsonList =
@@ -174,7 +177,7 @@ Future<List<ZoneRoutine>> getRoutinesFromPico() async {
         uri,
         headers: {'Content-Type': 'application/json'},
         body: json.encode(jsonList),
-      );
+      ).timeout(defaultTimeout); // Added timeout
 
       if (response.statusCode == 200) {
         return true;

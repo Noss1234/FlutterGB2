@@ -1,7 +1,7 @@
 // providers/plant_provider.dart
 import 'package:flutter/material.dart';
 import '../models/plant.dart';
-import '../services/esp_service.dart';
+import '../services/pico_service.dart'; // Ensure this import is correct
 
 class PlantProvider with ChangeNotifier {
   List<Plant> _plants = [];
@@ -10,7 +10,7 @@ class PlantProvider with ChangeNotifier {
 
   Future<void> fetchPlants() async {
     try {
-      _plants = await EspService.getPlantsFromESP();
+      _plants = await PicoService.getPlantsFromPico(); // Changed EspService.getPlantsFromESP to PicoService.getPlantsFromPico
       notifyListeners();
     } catch (e) {
       debugPrint('Fehler beim Laden der Pflanzen: $e');

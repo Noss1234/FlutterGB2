@@ -3,9 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/routine_time.dart';
 import '../models/zone_routine.dart';
-import '../services/esp_service.dart';
+import '../services/pico_service.dart'; // Renamed import
 
-  late EspService esp;
+  late PicoService pico; // Renamed esp to pico, EspService to PicoService
 
 class ZoneScheduleEditor extends StatefulWidget {
   final ZoneRoutine initialRoutine;
@@ -75,7 +75,7 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
             IconButton(
               icon: const Icon(Icons.sync),
               onPressed: () async {
-                final routines = await esp.getRoutinesFromPico();
+                final routines = await pico.getRoutinesFromPico(); // esp to pico
                 final matching = routines.firstWhere(
                   (r) => r.zone == widget.initialRoutine.zone,
                   orElse: () => ZoneRoutine(zone: widget.initialRoutine.zone, weeklySchedule: {}),
@@ -219,9 +219,9 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
 
 
 
-  Future<void> initializeEspService() async {
+  Future<void> initializePicoService() async { // Renamed initializeEspService
   final prefs = await SharedPreferences.getInstance();
-  prefs.getString('esp_ip') ?? '192.168.1.123'; // Read and discard 'ip'
-  esp = EspService();
+  prefs.getString('pico_ip') ?? '192.168.1.123'; // esp_ip to pico_ip
+  pico = PicoService(); // esp to pico, EspService to PicoService
 }
 }
