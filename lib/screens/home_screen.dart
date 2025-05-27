@@ -5,6 +5,7 @@ import '../services/pico_service.dart'; // Renamed import
 // import '../models/plant.dart'; // Removed unused import
 import '../widgets/plant_card.dart';
 import 'zone_overview_screen.dart'; // Added import for navigation
+import 'plant_library_screen.dart'; // Added import for PlantLibraryScreen
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -195,6 +196,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             tooltip: _isConnected ? "Verbunden" : "Nicht verbunden",
             onPressed: _loadInitialData,
+          ),
+          IconButton( // Added IconButton for PlantLibraryScreen
+            icon: const Icon(Icons.menu_book_outlined),
+            tooltip: 'Pflanzenbibliothek',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PlantLibraryScreen()),
+              );
+            },
           ),
         ],
       ),

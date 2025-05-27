@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../models/plant.dart';
 import '../services/pico_service.dart'; // Changed import to pico_service.dart
+import 'edit_plant_screen.dart'; // Added import for EditPlantScreen
 
 class PlantDetailScreen extends StatefulWidget {
   final Plant plant;
@@ -228,8 +229,11 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                   Center(
                     child: ElevatedButton.icon( // Button will use elevatedButtonTheme
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Bearbeiten-Funktion noch nicht implementiert.')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPlantScreen(plant: widget.plant),
+                          ),
                         );
                       },
                       icon: const Icon(Icons.edit_note_outlined),
