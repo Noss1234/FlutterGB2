@@ -35,7 +35,7 @@ class MyGardenApp extends StatelessWidget {
             elevation: 1.0,
             titleTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
           ),
-          cardTheme: const CardTheme( // Changed CardThemeData to CardTheme
+          cardTheme: const CardTheme( // Corrected CardThemeData to CardTheme
             elevation: 3.0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12.0)),

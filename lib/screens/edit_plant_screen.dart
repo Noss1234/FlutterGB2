@@ -80,8 +80,18 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               _buildTextField("Name", _name, (v) => _name = v!),
               _buildTextField("Kategorie", _category, (v) => _category = v!),
               _buildTextField(
-                  "pH-Wert", _ph.toString(), (v) => _ph = double.parse(v!),
-                  keyboardType: TextInputType.number),
+                "pH-Wert", _ph.toString(), (v) => _ph = double.parse(v!),
+                keyboardType: TextInputType.number,
+                validator: (value) { // Added custom validator for pH
+                  if (value == null || value.isEmpty) {
+                    return "Bitte angeben";
+                  }
+                  if (double.tryParse(value) == null) {
+                    return "Ungültige Zahl";
+                  }
+                  return null;
+                },
+              ),
               _buildTextField("Wasserbedarf (ml)", _waterNeed.toString(),
                   (v) => _waterNeed = int.parse(v!),
                   keyboardType: TextInputType.number),
@@ -105,7 +115,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildTextField(
       String label, String initialValue, Function(String?) onSaved,
-      {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+      {TextInputType keyboardType = TextInputType.text, int maxLines = 1, FormFieldValidator<String>? validator}) { // Added validator parameter
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
@@ -116,8 +126,8 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
         ),
         keyboardType: keyboardType,
         maxLines: maxLines,
-        validator: (value) =>
-            (value == null || value.isEmpty) ? "Bitte angeben" : null,
+        validator: validator ?? ((value) => // Use provided validator or default
+            (value == null || value.isEmpty) ? "Bitte angeben" : null),
         onSaved: onSaved,
       ),
     );
