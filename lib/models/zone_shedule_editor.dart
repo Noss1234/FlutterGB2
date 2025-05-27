@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/routine_time.dart';
 import '../models/zone_routine.dart';
 import '../services/esp_service.dart';
@@ -12,11 +13,11 @@ class ZoneScheduleEditor extends StatefulWidget {
   final Function(ZoneRoutine) onSave;
 
   const ZoneScheduleEditor({
-    Key? key,
+    super.key,
     required this.initialRoutine,
     required this.onSave,
     this.isFromPico = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ZoneScheduleEditor> createState() => _ZoneScheduleEditorState();
@@ -72,7 +73,7 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
         actions: [
           if (widget.isFromPico)
             IconButton(
-              icon: Icon(Icons.sync),
+              icon: const Icon(Icons.sync),
               onPressed: () async {
                 final routines = await esp.getRoutinesFromPico();
                 final matching = routines.firstWhere(
@@ -90,7 +91,7 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
       backgroundColor: background,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Column( // const Column(
           children: [
             DropdownButton<int>(
               value: _selectedDay,
@@ -104,13 +105,13 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
             ),
             ElevatedButton(
               onPressed: _pickTime,
-              child: Text('Zeit hinzufügen'),
+              child: const Text('Zeit hinzufügen'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Row(
+              child: Row( // const Row(
                 children: [
-                  Text("Düngung: ", style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text("Düngung: ", style: TextStyle(fontWeight: FontWeight.w600)), // const Text
                   DropdownButton<DuengenFrequenz>(
                     value: _duengenFrequenz,
                     onChanged: (val) => setState(() => _duengenFrequenz = val!),
@@ -151,13 +152,13 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
                                       _mengen[key] = parsed;
                                     }
                                   },
-                                  decoration: InputDecoration(hintText: 'ml'),
+                                  decoration: const InputDecoration(hintText: 'ml'),
                                 ),
                               ),
                             ],
                           ),
                           if (_duengenFrequenz == DuengenFrequenz.einmalWoechentlich)
-                            Row(
+                            Row( // const Row(
                               children: [
                                 Checkbox(
                                   value: isDuengenZeit,
@@ -169,13 +170,13 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
                                     }
                                   },
                                 ),
-                                Text('Düngen einmal wöchentlich hier')
+                                const Text('Düngen einmal wöchentlich hier') // const Text
                               ],
                             )
                         ],
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () => _removeTime(entry.key, time),
                       ),
                     );
@@ -187,14 +188,14 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
               onPressed: () {
                 if (_schedule.isEmpty || _schedule.values.every((list) => list.isEmpty)) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Bitte mindestens einen Zeitplanpunkt hinzufügen.')),
+                    const SnackBar(content: Text('Bitte mindestens einen Zeitplanpunkt hinzufügen.')), // const SnackBar
                   );
                   return;
                 }
 
                 if (_duengenFrequenz == DuengenFrequenz.einmalWoechentlich && (_duengenZeitpunkt == null || !_mengen.containsKey(_duengenZeitpunkt!))) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Bitte wähle einen Düngungszeitpunkt für "einmal wöchentlich" aus.')),
+                    const SnackBar(content: Text('Bitte wähle einen Düngungszeitpunkt für "einmal wöchentlich" aus.')), // const SnackBar
                   );
                   return;
                 }
@@ -208,7 +209,7 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
                 ));
                 Navigator.pop(context);
               },
-              child: Text('Speichern'),
+              child: const Text('Speichern'),
             ),
           ],
         ),
@@ -220,7 +221,7 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
 
   Future<void> initializeEspService() async {
   final prefs = await SharedPreferences.getInstance();
-  final ip = prefs.getString('esp_ip') ?? '192.168.1.123';
-  esp = EspService('http://$ip');
+  prefs.getString('esp_ip') ?? '192.168.1.123'; // Read and discard 'ip'
+  esp = EspService();
 }
 }

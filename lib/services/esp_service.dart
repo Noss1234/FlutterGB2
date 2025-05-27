@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/plant.dart'; // Assuming Plant model is one level up, in models/
 import 'package:flutter/foundation.dart';
 import '../models/zone_routine.dart';
-import '../models/routine_time.dart';
+// import '../models/routine_time.dart'; // Removed unused import
 
 class EspService {
   static Future<String> getBaseUrl() async {
@@ -132,33 +132,9 @@ class EspService {
     }
   }
 
-  Future<List<ZoneRoutine>> getRoutinesFromPico() async {
-  final response = await getJson('/routines');
-
-  if (response is List) {
-    final Map<int, Map<int, List<RoutineTime>>> tempMap = {};
-
-    for (var item in response) {
-      int kanal = item['kanal'];
-      int tag = item['tag'];
-      int stunde = item['stunde'];
-      int minute = item['minute'];
-
-      tempMap.putIfAbsent(kanal, () => {});
-      tempMap[kanal]!.putIfAbsent(tag, () => []);
-      tempMap[kanal]![tag]!.add(RoutineTime(hour: stunde, minute: minute));
-    }
-
-    return tempMap.entries.map((entry) {
-      return ZoneRoutine(zone: entry.key, weeklySchedule: entry.value);
-    }).toList();
-  }
-
-  return [];
-}
-
 
 Future<List<ZoneRoutine>> getRoutinesFromPico() async {
+    final baseUrl = await EspService.getBaseUrl(); // Added baseUrl
     final uri = Uri.parse('$baseUrl/routines');
 
     try {
@@ -181,12 +157,13 @@ Future<List<ZoneRoutine>> getRoutinesFromPico() async {
         throw Exception('Fehler beim Laden der Routinen: ${response.statusCode}');
       }
     } catch (e) {
-      print('HTTP-Fehler: $e');
+      debugPrint('HTTP-Fehler: $e'); // Replaced print with debugPrint
       return [];
     }
   }
 
   Future<bool> sendZoneRoutines(List<ZoneRoutine> routines) async {
+    final baseUrl = await EspService.getBaseUrl(); // Added baseUrl
     final uri = Uri.parse('$baseUrl/receive_routines');
 
     final List<Map<String, dynamic>> jsonList =
@@ -202,11 +179,11 @@ Future<List<ZoneRoutine>> getRoutinesFromPico() async {
       if (response.statusCode == 200) {
         return true;
       } else {
-        print('Fehler beim Senden: ${response.statusCode}');
+        debugPrint('Fehler beim Senden: ${response.statusCode}'); // Replaced print with debugPrint
         return false;
       }
     } catch (e) {
-      print('HTTP-Fehler: $e');
+      debugPrint('HTTP-Fehler: $e'); // Replaced print with debugPrint
       return false;
     }
   }

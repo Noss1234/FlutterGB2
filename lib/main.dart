@@ -7,8 +7,8 @@ import 'providers/plant_provider.dart';
 // Removed: import 'screens/zone_overview_screen.dart';
 // Removed: import 'screens/settings_screen.dart';
 import 'screens/main_navigation_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'screens/zone_overview_screen.dart';
+// import 'package:shared_preferences/shared_preferences.dart'; // Removed unused import
+// import 'screens/zone_overview_screen.dart'; // Removed unused import as per analyzer
 import 'services/esp_initializer.dart';
 
 void main() async {
@@ -29,49 +29,49 @@ class MyGardenApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.green[600],
           scaffoldBackgroundColor: Colors.grey[200],
-          appBarTheme: AppBarTheme( // Made const
+          appBarTheme: AppBarTheme( 
             backgroundColor: Colors.green[600],
             foregroundColor: Colors.white,
             elevation: 1.0,
-            titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white), // Made const
+            titleTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
           ),
-cardTheme: CardThemeData(
-  elevation: 3.0,
-  shape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-  ),
-  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-  color: Colors.white,
-),
+          cardTheme: const CardTheme( // Changed CardThemeData to CardTheme
+            elevation: 3.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            ),
+            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+            color: Colors.white,
+          ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green[500],
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))), // Added const and BorderRadius.all
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ),
           inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Colors.grey[400]!),
+            border: OutlineInputBorder( // Can be const if BorderSide is const
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)), // Added const
+              borderSide: BorderSide(color: Colors.grey[400]!), // Cannot be const due to Colors.grey[400]!
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Colors.green[600]!),
+            focusedBorder: OutlineInputBorder( // Can be const if BorderSide is const
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)), // Added const
+              borderSide: BorderSide(color: Colors.green[600]!), // Cannot be const due to Colors.green[600]!
             ),
             filled: true,
             fillColor: Colors.white70,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
-          textTheme: TextTheme(
-            headlineSmall: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green[800]),
-            titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[800]),
-            bodyMedium: TextStyle(fontSize: 14, color: Colors.grey[700]),
+          textTheme: TextTheme( // Can be const
+            headlineSmall: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green[800]), // Cannot be const
+            titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[800]), // Cannot be const
+            bodyMedium: TextStyle(fontSize: 14, color: Colors.grey[700]), // Cannot be const
           ),
-          iconTheme: IconThemeData(
-            color: Colors.green[600],
+          iconTheme: IconThemeData( // Can be const
+            color: Colors.green[600], // Cannot be const
           ),
         ),
         home: const MainNavigationScreen(),

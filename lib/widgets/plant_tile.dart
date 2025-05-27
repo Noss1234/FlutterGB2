@@ -11,11 +11,11 @@ class PlantTile extends StatelessWidget {
   final VoidCallback? onTap;
 
   const PlantTile({
-    Key? key,
+    super.key, // Changed to super.key
     required this.plant,
     required this.onEdit,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

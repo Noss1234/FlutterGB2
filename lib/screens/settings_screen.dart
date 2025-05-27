@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../services/esp_service.dart';
-import 'services/esp_initializer.dart';
+import '../services/esp_initializer.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

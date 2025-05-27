@@ -41,11 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
         throw Exception("Keine Verbindung zum ESP");
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Fehler beim Laden der Daten: $e"), backgroundColor: Colors.redAccent),
-        );
-      }
+      if (!mounted) return; // Added this check
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Fehler beim Laden der Daten: $e"), backgroundColor: Colors.redAccent),
+      );
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
