@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart'; // Removed unused import
 import '../models/routine_time.dart';
 import '../models/zone_routine.dart';
 import '../services/pico_service.dart'; // Renamed import
@@ -220,8 +220,7 @@ class _ZoneScheduleEditorState extends State<ZoneScheduleEditor> {
 
 
   Future<void> initializePicoService() async { // Renamed initializeEspService
-  final prefs = await SharedPreferences.getInstance();
-  prefs.getString('pico_ip') ?? '192.168.1.123'; // esp_ip to pico_ip
+  // SharedPreferences logic removed as pico_ip is no longer used by PicoService.getBaseUrl
   pico = PicoService(); // esp to pico, EspService to PicoService
 }
 }

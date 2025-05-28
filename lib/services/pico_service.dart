@@ -1,7 +1,7 @@
 import 'dart:async'; // Added for Duration and .timeout()
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart'; // Removed unused import
 import '../models/plant.dart'; // Assuming Plant model is one level up, in models/
 import 'package:flutter/foundation.dart';
 import '../models/zone_routine.dart';
@@ -11,9 +11,7 @@ class PicoService { // Renamed EspService to PicoService
   static const Duration defaultTimeout = Duration(seconds: 10); // Added default timeout
 
   static Future<String> getBaseUrl() async {
-    final prefs = await SharedPreferences.getInstance();
-    final ip = prefs.getString('pico_ip') ?? '192.168.4.1'; // esp_ip to pico_ip
-    return 'http://$ip';
+    return 'http://192.168.8.170'; // Hardcoded IP address
   }
 
   static Future<List<Plant>> getPlantsFromPico() async { // Renamed getPlantsFromESP

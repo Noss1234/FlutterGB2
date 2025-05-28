@@ -13,7 +13,7 @@ class SettingsScreen extends StatefulWidget {
 
 // ⚙️ Einstellungen: IP-Adresse, Kalibrierung, Farben, zukünftige MQTT etc.
 class _SettingsScreenState extends State<SettingsScreen> {
-  final TextEditingController _ipController = TextEditingController();
+  // final TextEditingController _ipController = TextEditingController(); // Removed _ipController
   final TextEditingController _calibrationController = TextEditingController();
   final TextEditingController _httpTestEndpointController = TextEditingController(text: '/status');
   final TextEditingController _httpTestPostBodyController = TextEditingController();
@@ -31,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    _ipController.text = prefs.getString('pico_ip') ?? '192.168.4.1'; // esp_ip to pico_ip
+    // _ipController.text = prefs.getString('pico_ip') ?? '192.168.4.1'; // Removed IP loading
     _calibrationController.text = prefs.getString('calibration') ?? '840';
   }
 
@@ -39,11 +39,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isSaving = true);
     final prefs = await SharedPreferences.getInstance();
 
-    final rawIp = _ipController.text.trim();
-    final ip = rawIp.replaceAll(RegExp(r'^https?://'), '');
+    // final rawIp = _ipController.text.trim(); // Removed IP saving logic
+    // final ip = rawIp.replaceAll(RegExp(r'^https?://'), ''); // Removed IP saving logic
     final calibration = _calibrationController.text.trim();
 
-    await prefs.setString('pico_ip', ip); // esp_ip to pico_ip
+    // await prefs.setString('pico_ip', ip); // Removed IP saving logic
     await prefs.setString('calibration', calibration);
     await initializePicoService(); // initializeEspService to initializePicoService
 
@@ -178,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void dispose() {
-    _ipController.dispose();
+    // _ipController.dispose(); // Removed _ipController disposal
     _calibrationController.dispose();
     _httpTestEndpointController.dispose();
     _httpTestPostBodyController.dispose();
@@ -199,8 +199,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           children: [
             _buildSectionTitle("Verbindung & Kalibrierung", theme),
-            _buildTextField("IP-Adresse des Pico", _ipController, theme: theme), // ESP to Pico
-            const SizedBox(height: 12),
+            // _buildTextField("IP-Adresse des Pico", _ipController, theme: theme), // Removed IP TextField
+            // const SizedBox(height: 12), // Removed SizedBox if it was only for IP field
             _buildTextField(
               "Kalibrierfaktor (Impulse/Liter)",
               _calibrationController,
