@@ -27,6 +27,7 @@ class MyGardenApp extends StatelessWidget {
       child: MaterialApp(
         title: 'MyGarden Controller',
         theme: ThemeData(
+          useMaterial3: true, // Added useMaterial3: true
           primaryColor: Colors.green[600],
           scaffoldBackgroundColor: Colors.grey[200],
           appBarTheme: AppBarTheme( 
@@ -37,11 +38,11 @@ class MyGardenApp extends StatelessWidget {
           ),
           cardTheme: const CardTheme( // Corrected CardThemeData to CardTheme
             elevation: 3.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            shape: RoundedRectangleBorder( // This can be const
+              borderRadius: BorderRadius.all(Radius.circular(12.0)), // This can be const
             ),
-            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-            color: Colors.white,
+            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // This can be const
+            color: Colors.white, // This is const
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
